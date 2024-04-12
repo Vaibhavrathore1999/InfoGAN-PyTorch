@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import time
 import random
-
+import os
 from models.mnist_model import Generator, Discriminator, DHead, QHead
 from dataloader import get_data
 from utils import *
@@ -131,6 +131,10 @@ print("-"*25)
 start_time = time.time()
 iters = 0
 
+checkpoint_dir = 'checkpoint'
+if not os.path.exists(checkpoint_dir):
+    os.makedirs(checkpoint_dir)
+
 for epoch in range(params['num_epochs']):
     epoch_start_time = time.time()
 
@@ -143,7 +147,7 @@ for epoch in range(params['num_epochs']):
         # Updating discriminator and DHead
         optimD.zero_grad()
         # Real data
-        label = torch.full((b_size, ), real_label, device=device)
+        label = torch.full((b_size, ), real_label, device=device).float()
         output1 = discriminator(real_data)
         probs_real = netD(output1).view(-1)
         loss_real = criterionD(probs_real, label)
