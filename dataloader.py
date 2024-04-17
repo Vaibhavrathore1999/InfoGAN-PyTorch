@@ -1,6 +1,9 @@
 import torch
 import torchvision.transforms as transforms
-import torchvision.datasets as dsets
+import torchvision.datasets as datasets
+from torchvision.datasets import ImageFolder
+from torch.utils.data import DataLoader
+# from datasets import load_dataset
 
 # Directory containing the data.
 root = 'data/'
@@ -14,7 +17,7 @@ def get_data(dataset, batch_size):
             transforms.CenterCrop(28),
             transforms.ToTensor()])
 
-        dataset = dsets.MNIST(root+'mnist/', train='train', 
+        dataset = datasets.MNIST(root+'mnist/', train='train', 
                                 download=True, transform=transform)
 
     # Get SVHN dataset.
@@ -24,7 +27,7 @@ def get_data(dataset, batch_size):
             transforms.CenterCrop(32),
             transforms.ToTensor()])
 
-        dataset = dsets.SVHN(root+'svhn/', split='train', 
+        dataset = datasets.SVHN(root+'svhn/', split='train', 
                                 download=True, transform=transform)
 
     # Get FashionMNIST dataset.
@@ -34,7 +37,7 @@ def get_data(dataset, batch_size):
             transforms.CenterCrop(28),
             transforms.ToTensor()])
 
-        dataset = dsets.FashionMNIST(root+'fashionmnist/', train='train', 
+        dataset = datasets.FashionMNIST(root+'fashionmnist/', train='train', 
                                 download=True, transform=transform)
 
     # Get CelebA dataset.
@@ -47,11 +50,25 @@ def get_data(dataset, batch_size):
             transforms.Normalize((0.5, 0.5, 0.5),
                 (0.5, 0.5, 0.5))])
 
-        dataset = dsets.ImageFolder(root=root+'celeba/', transform=transform)
+        dataset = datasets.CelebA(root+'celeba/', split='train', 
+                                download=True,transform=transform)
+        
+    elif dataset == 'PatternNet':
+        transform = transforms.Compose([
+            transforms.Resize(32),
+            transforms.CenterCrop(32),
+            transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5),
+                (0.5, 0.5, 0.5))])
+        
+        data_path = "/home/ninad/vaibhav_r/InfoGAN-PyTorch/data/PatternNet/images"
+        dataset = ImageFolder(root=data_path, transform=transform)
+
+        
 
     # Create dataloader.
-    dataloader = torch.utils.data.DataLoader(dataset, 
-                                            batch_size=batch_size, 
-                                            shuffle=True)
+    dataloader = DataLoader(dataset, 
+                            batch_size=batch_size, 
+                            shuffle=True)
 
     return dataloader

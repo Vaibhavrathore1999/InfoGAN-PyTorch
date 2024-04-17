@@ -22,6 +22,9 @@ elif(params['dataset'] == 'CelebA'):
 elif(params['dataset'] == 'FashionMNIST'):
     from models.mnist_model import Generator, Discriminator, DHead, QHead
 
+elif(params['dataset'] == 'PatternNet'):
+    from models.celeba_model import Generator, Discriminator, DHead, QHead
+
 # Set random seed for reproducibility.
 seed = 1123
 random.seed(seed)
@@ -61,14 +64,20 @@ elif(params['dataset'] == 'FashionMNIST'):
     params['dis_c_dim'] = 10
     params['num_con_c'] = 2
 
+elif(params['dataset'] == 'PatternNet'):
+    params['num_z'] = 128
+    params['num_dis_c'] = 10
+    params['dis_c_dim'] = 10
+    params['num_con_c'] = 0
+
 # Plot the training images.
 sample_batch = next(iter(dataloader))
-plt.figure(figsize=(10, 10))
-plt.axis("off")
-plt.imshow(np.transpose(vutils.make_grid(
-    sample_batch[0].to(device)[ : 100], nrow=10, padding=2, normalize=True).cpu(), (1, 2, 0)))
-plt.savefig('Training Images {}'.format(params['dataset']))
-plt.close('all')
+# plt.figure(figsize=(10, 10))
+# plt.axis("off")
+# plt.imshow(np.transpose(vutils.make_grid(
+#     sample_batch[0].to(device)[ : 100], nrow=10, padding=2, normalize=True).cpu(), (1, 2, 0)))
+# plt.savefig('Training Images {}'.format(params['dataset']))
+# plt.close('all')
 
 # Initialise the network.
 netG = Generator().to(device)
